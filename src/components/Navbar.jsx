@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { LogOut, BarChart3, Settings, Users, Shield, Menu, X, Moon, Sun } from 'lucide-react';
-import { useState } from 'react';
+import { LogOut, BarChart3, Settings, Users, Shield, Menu, X, Moon, Sun, Home, Zap } from 'lucide-react';
 
 const Navbar = () => {
   const { isLoggedIn, user, logout } = useAuth();
@@ -11,19 +10,25 @@ const Navbar = () => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const navItems = [
+  const publicNavItems = [
+    { path: '/', label: 'Home', icon: Home },
+    { path: '/pricing', label: 'Preise', icon: Zap },
+    { path: '/heizungen', label: 'Heizungen', icon: Shield },
+    { path: '/ki', label: 'KI-Marketplace', icon: Zap },
+  ];
+
+  const authNavItems = [
     { path: '/dashboard', label: 'Dashboard', icon: BarChart3 },
     { path: '/devices', label: 'Geräte', icon: Shield },
     { path: '/settings', label: 'Einstellungen', icon: Settings },
   ];
 
-  if (user?.role === 'admin') {
-    navItems.push({ path: '/admin', label: 'Admin', icon: Users });
-  }
+  const adminNavItems = user?.role === 'admin' ? [
+    { path: '/admin', label: 'Admin', icon: Users },
+  ] : [];
 
+  const navItems = isLoggedIn ? [...authNavItems, ...adminNavItems] : publicNavItems;
   const isActive = (path) => location.pathname === path;
-
-  if (!isLoggedIn) return null;
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-40 backdrop-blur-md border-b transition-colors ${
@@ -34,11 +39,11 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/dashboard" className="flex items-center gap-2 group">
+          <Link to={isLoggedIn ? "/dashboard" : "/"} className="flex items-center gap-2 group">
             <div className="w-8 h-8 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-              <span className="text-white font-bold text-sm">CF</span>
+              <span className="text-white font-bold text-sm">🔥</span>
             </div>
-            <span className={`font-bold hidden sm:inline ${isDark ? 'text-white' : 'text-slate-900'}`}>
+            <span className={`font-bold hidden sm:inline text-lg ${isDark ? 'text-white' : 'text-slate-900'}`}>
               Core<span className="text-brand-primary">Flux</span>
             </span>
           </Link>
@@ -55,7 +60,7 @@ const Navbar = () => {
                     isActive(item.path)
                       ? `bg-brand-primary text-white`
                       : isDark
-                      ? `${isDark ? 'text-slate-400 hover:text-white hover:bg-slate-800' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'}`
+                      ? `text-slate-400 hover:text-white hover:bg-slate-800`
                       : `text-slate-600 hover:text-slate-900 hover:bg-slate-100`
                   }`}
                 >
@@ -76,27 +81,48 @@ const Navbar = () => {
                   ? 'bg-slate-800 hover:bg-slate-700 text-yellow-400'
                   : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
               }`}
+              title={isDark ? 'Light Mode' : 'Dark Mode'}
             >
               {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
 
-            {/* User Badge */}
-            <div className={`px-3 py-1.5 rounded-lg text-sm font-medium ${
-              isDark
-                ? 'bg-slate-800 text-slate-300'
-                : 'bg-slate-200 text-slate-700'
-            }`}>
-              {user?.name}
-            </div>
+            {isLoggedIn ? (
+              <>
+                {/* User Badge */}
+                <div className={`px-3 py-1.5 rounded-lg text-sm font-medium ${
+                  isDark
+                    ? 'bg-slate-800 text-slate-300'
+                    : 'bg-slate-200 text-slate-700'
+                }`}>
+                  {user?.name}
+                </div>
 
-            {/* Logout Button */}
-            <button
-              onClick={logout}
-              className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition-colors flex items-center gap-2"
-            >
-              <LogOut className="w-4 h-4" />
-              Logout
-            </button>
+                {/* Logout Button */}
+                <button
+                  onClick={logout}
+                  className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition-colors flex items-center gap-2"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                {/* Login & Signup Buttons */}
+                <Link
+                  to="/login"
+                  className="px-4 py-2 rounded-lg font-medium border-2 border-brand-primary text-brand-primary hover:bg-blue-50 dark:hover:bg-slate-800 transition-all"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/login"
+                  className="px-4 py-2 rounded-lg font-medium bg-brand-primary text-white hover:shadow-lg transition-all"
+                >
+                  Signup
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -145,16 +171,35 @@ const Navbar = () => {
                 </Link>
               );
             })}
-            <button
-              onClick={() => {
-                logout();
-                setMobileMenuOpen(false);
-              }}
-              className="w-full mt-4 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition-colors flex items-center justify-center gap-2"
-            >
-              <LogOut className="w-4 h-4" />
-              Logout
-            </button>
+            {isLoggedIn ? (
+              <button
+                onClick={() => {
+                  logout();
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full mt-4 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium transition-colors flex items-center justify-center gap-2"
+              >
+                <LogOut className="w-4 h-4" />
+                Logout
+              </button>
+            ) : (
+              <div className="space-y-2 mt-4">
+                <Link
+                  to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block px-4 py-2 rounded-lg font-medium border-2 border-brand-primary text-brand-primary hover:bg-blue-50 dark:hover:bg-slate-800 transition-all text-center"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block px-4 py-2 rounded-lg font-medium bg-brand-primary text-white hover:shadow-lg transition-all text-center"
+                >
+                  Signup
+                </Link>
+              </div>
+            )}
           </div>
         )}
       </div>

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import Navbar from './components/Navbar';
+import AIChat from './components/AIChat';
 import PrivateRoute from './components/PrivateRoute';
 
 // Pages
@@ -16,6 +17,8 @@ import Team from './pages/Team';
 import Impressum from './pages/Impressum';
 import Pricing from './pages/Pricing';
 import Checkout from './pages/Checkout';
+import Heizungen from './pages/Heizungen';
+import KIMarketplace from './pages/KIMarketplace';
 
 // Styles
 import './index.css';
@@ -24,22 +27,20 @@ function AppLayout({ children }) {
   const { isLoggedIn } = useAuth();
   const { isDark } = useTheme();
   
-  if (!isLoggedIn) {
-    return (
-      <div className={isDark ? 'dark' : ''}>
-        {children}
-      </div>
-    );
-  }
-
   return (
     <div className={isDark ? 'dark' : ''}>
       <Navbar />
-      <main className="flex-1 pt-24 pb-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {!isLoggedIn ? (
+        <div>
           {children}
         </div>
-      </main>
+      ) : (
+        <main className="flex-1 pt-24 pb-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {children}
+          </div>
+        </main>
+      )}
     </div>
   );
 }
@@ -58,6 +59,8 @@ function App() {
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/team" element={<Team />} />
               <Route path="/impressum" element={<Impressum />} />
+              <Route path="/heizungen" element={<Heizungen />} />
+              <Route path="/ki" element={<KIMarketplace />} />
 
               {/* Protected Routes */}
               <Route
@@ -97,6 +100,7 @@ function App() {
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </AppLayout>
+          <AIChat />
         </AuthProvider>
       </ThemeProvider>
     </Router>
