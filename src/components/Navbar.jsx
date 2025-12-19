@@ -12,15 +12,13 @@ const Navbar = () => {
 
   const publicNavItems = [
     { path: '/', label: 'Home', icon: Home },
-    { path: '/pricing', label: 'Preise', icon: Zap },
-    { path: '/heizungen', label: 'Heizungen', icon: Shield },
-    { path: '/ki', label: 'KI-Marketplace', icon: Zap },
+    { path: '/pricing', label: 'Pricing', icon: Zap },
   ];
 
   const authNavItems = [
     { path: '/dashboard', label: 'Dashboard', icon: BarChart3 },
-    { path: '/devices', label: 'Geräte', icon: Shield },
-    { path: '/settings', label: 'Einstellungen', icon: Settings },
+    { path: '/devices', label: 'Devices', icon: Shield },
+    { path: '/settings', label: 'Settings', icon: Settings },
   ];
 
   const adminNavItems = user?.role === 'admin' ? [
@@ -31,7 +29,7 @@ const Navbar = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-40 backdrop-blur-md border-b transition-colors ${
+    <nav className={`fixed top-0 left-0 right-0 z-40 backdrop-blur-sm border-b transition-colors ${
       isDark
         ? 'bg-slate-900/80 border-slate-800'
         : 'bg-white/80 border-slate-200'
@@ -150,7 +148,7 @@ const Navbar = () => {
         {mobileMenuOpen && (
           <div className={`md:hidden pb-4 space-y-2 border-t ${
             isDark ? 'border-slate-800' : 'border-slate-200'
-          } animate-slide-in-down`}>
+          }`}>
             {navItems.map((item) => {
               const Icon = item.icon;
               return (
@@ -196,8 +194,7 @@ const Navbar = () => {
                   onClick={() => setMobileMenuOpen(false)}
                   className="block px-4 py-2 rounded-lg font-medium bg-brand-primary text-white hover:shadow-lg transition-all text-center"
                 >
-                  Signup
-                </Link>
+                  Signup                </Link>
               </div>
             )}
           </div>

@@ -58,7 +58,7 @@ const Pricing = () => {
   ];
 
   return (
-    <div className="min-h-screen py-20">
+    <div className="min-h-screen pt-24 pb-20">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16 animate-fade-in">

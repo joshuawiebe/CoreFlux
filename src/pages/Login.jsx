@@ -38,7 +38,7 @@ const Login = () => {
   };
 
   return (
-    <div className={`min-h-screen flex items-center justify-center p-4 transition-colors ${
+    <div className={`min-h-screen flex items-center justify-center p-4 pt-20 transition-colors ${
       isDark ? 'bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950' : 'bg-gradient-to-br from-white via-slate-50 to-white'
     }`}>
       <div className="w-full max-w-md z-10 animate-slide-in-up">

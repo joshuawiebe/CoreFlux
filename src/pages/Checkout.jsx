@@ -37,7 +37,7 @@ const Checkout = () => {
 
   if (orderComplete) {
     return (
-      <div className="min-h-screen flex items-center justify-center py-20">
+      <div className="min-h-screen flex items-center justify-center pt-24 pb-20">
         <div className="max-w-md w-full animate-slide-in-up">
           <div className="text-center">
             <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -62,7 +62,7 @@ const Checkout = () => {
   }
 
   return (
-    <div className="min-h-screen py-20">
+    <div className="min-h-screen pt-24 pb-20">
       <div className="max-w-6xl mx-auto px-4">
         <Link to="/pricing" className="flex items-center gap-2 text-brand-primary mb-8 hover:gap-3 transition-all">
           <ArrowLeft className="w-5 h-5" />
