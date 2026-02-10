@@ -1,8 +1,8 @@
 import React from 'react';
-import ChatGPTStyleChat from '../components/ChatGPTStyleChat';
+import ProfessionalAIApp from '../components/ProfessionalAIApp';
 
 const AIChat = () => {
-  return <ChatGPTStyleChat />;
+  return <ProfessionalAIApp />;
 };
 
 export default AIChat;

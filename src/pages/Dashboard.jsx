@@ -35,7 +35,7 @@ const Dashboard = () => {
     // Initial data
     setChartData(generateChartData());
 
-    // Simulate real-time updates
+    // Simulate real-time updates with smooth transitions
     const interval = setInterval(() => {
       setStats(prev => ({
         ...prev,
@@ -46,13 +46,15 @@ const Dashboard = () => {
       }));
       setChartData(prev => {
         const newData = [...prev];
+        // Remove oldest data point and add new one (smooth scrolling effect)
+        newData.shift(); // Remove first element
         newData.push({
           day: `+${newData.length + 1}`,
-          requests: Math.floor(Math.random() * 5000) + 1000,
-          power: Math.floor(Math.random() * 3000) + 1500,
-          temperature: Math.floor(Math.random() * 15) + 55,
+          requests: Math.max(1000, newData[newData.length - 1]?.requests || 3000) + Math.floor((Math.random() - 0.5) * 1000),
+          power: Math.max(1500, newData[newData.length - 1]?.power || 2500) + Math.floor((Math.random() - 0.5)  * 800),
+          temperature: Math.max(55, newData[newData.length - 1]?.temperature || 65) + Math.floor((Math.random() - 0.5) * 4),
         });
-        return newData.slice(-20);
+        return newData;
       });
     }, 3000);
 
@@ -372,7 +374,7 @@ const Dashboard = () => {
               AI Requests Trend
             </h3>
             <ResponsiveContainer width="100%" height={300}>
-              <AreaChart data={chartData}>
+              <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorRequests" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#0066CC" stopOpacity={0.8} />
@@ -389,7 +391,7 @@ const Dashboard = () => {
                   }}
                   labelStyle={{ color: isDark ? '#F3F4F6' : '#111827' }}
                 />
-                <Area type="monotone" dataKey="requests" stroke="#0066CC" fillOpacity={1} fill="url(#colorRequests)" />
+                <Area type="monotone" dataKey="requests" stroke="#0066CC" fillOpacity={1} fill="url(#colorRequests)" isAnimationActive={true} animationDuration={300} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -400,7 +402,7 @@ const Dashboard = () => {
               Power & Temperature
             </h3>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={chartData}>
+              <BarChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#374151' : '#E5E7EB'} />
                 <XAxis dataKey="day" stroke={isDark ? '#9CA3AF' : '#6B7280'} />
                 <YAxis stroke={isDark ? '#9CA3AF' : '#6B7280'} />
@@ -412,8 +414,8 @@ const Dashboard = () => {
                   labelStyle={{ color: isDark ? '#F3F4F6' : '#111827' }}
                 />
                 <Legend />
-                <Bar dataKey="power" stackId="a" fill="#0099FF" />
-                <Bar dataKey="temperature" stackId="a" fill="#FF6B6B" />
+                <Bar dataKey="power" stackId="a" fill="#0099FF" isAnimationActive={true} animationDuration={300} />
+                <Bar dataKey="temperature" stackId="a" fill="#FF6B6B" isAnimationActive={true} animationDuration={300} />
               </BarChart>
             </ResponsiveContainer>
           </div>

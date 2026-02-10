@@ -30,11 +30,6 @@ const LandingNew = () => {
 
           {/* Main Content Wrapper */}
           <div className="relative w-full overflow-x-hidden">
-            {/* Embedded Chat */}
-            <Reveal>
-              <EmbeddedChat />
-            </Reveal>
-
             {/* CoreFlux Explanation */}
             <Reveal delay={0.2}>
               <WhereIsCoreFlux />
