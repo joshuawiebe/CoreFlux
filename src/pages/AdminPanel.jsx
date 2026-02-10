@@ -23,7 +23,7 @@ const AdminPanel = () => {
   }, []);
 
   const AdminCard = ({ icon: Icon, label, value, unit, color }) => (
-    <div className="rounded-2xl backdrop-blur-sm border dark:bg-slate-900/50 dark:border-slate-800 bg-white border-slate-200 p-6 group hover:scale-105 transform">
+    <div className={`rounded-xl border p-6 group hover:shadow-lg transform transition-all ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'}`}>
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <p className="text-gray-400 text-sm mb-2">{label}</p>

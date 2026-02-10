@@ -8,9 +8,11 @@ export default {
     extend: {
       colors: {
         brand: {
-          primary: '#00A3FF',
-          secondary: '#7C3AED',
-          accent: '#EC4899',
+          primary: '#0066CC',
+          secondary: '#004399',
+          accent: '#0099FF',
+          light: '#E6F2FF',
+          dark: '#003366',
         },
       },
       animation: {

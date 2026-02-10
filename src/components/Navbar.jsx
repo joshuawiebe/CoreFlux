@@ -3,12 +3,17 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { LogOut, BarChart3, Settings, Users, Shield, Menu, X, Moon, Sun, Home, Zap } from 'lucide-react';
+import lightLogo from '../assets/light.png';
+import darkLogo from '../assets/dark.png';
+import LanguageSelector from './LanguageSelector';
+import SettingsModal from './SettingsModal';
 
 const Navbar = () => {
   const { isLoggedIn, user, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const publicNavItems = [
     { path: '/', label: 'Home', icon: Home },
@@ -17,6 +22,7 @@ const Navbar = () => {
 
   const authNavItems = [
     { path: '/dashboard', label: 'Dashboard', icon: BarChart3 },
+    { path: '/ai-chat', label: 'AI Chat', icon: Zap },
     { path: '/devices', label: 'Devices', icon: Shield },
     { path: '/settings', label: 'Settings', icon: Settings },
   ];
@@ -31,16 +37,18 @@ const Navbar = () => {
   return (
     <nav className={`fixed top-0 left-0 right-0 z-40 backdrop-blur-sm border-b transition-colors ${
       isDark
-        ? 'bg-slate-900/80 border-slate-800'
-        : 'bg-white/80 border-slate-200'
+        ? 'bg-slate-900 border-slate-800'
+        : 'bg-white border-slate-100'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to={isLoggedIn ? "/dashboard" : "/"} className="flex items-center gap-2 group">
-            <div className="w-8 h-8 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-              <span className="text-white font-bold text-sm">🔥</span>
-            </div>
+            <img 
+              src={isDark ? darkLogo : lightLogo} 
+              alt="CoreFlux Logo" 
+              className="h-8 group-hover:scale-110 transition-transform"
+            />
             <span className={`font-bold hidden sm:inline text-lg ${isDark ? 'text-white' : 'text-slate-900'}`}>
               Core<span className="text-brand-primary">Flux</span>
             </span>
@@ -71,6 +79,22 @@ const Navbar = () => {
 
           {/* Right Menu */}
           <div className="hidden md:flex items-center gap-4">
+            {/* Settings Button */}
+            <button
+              onClick={() => setSettingsOpen(true)}
+              className={`p-2 rounded-lg transition-colors ${
+                isDark
+                  ? 'bg-slate-800 hover:bg-slate-700 text-slate-300'
+                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+              }`}
+              title="Settings"
+            >
+              <Settings className="w-5 h-5" />
+            </button>
+
+            {/* Language Selector */}
+            <LanguageSelector />
+            
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
@@ -199,6 +223,9 @@ const Navbar = () => {
             )}
           </div>
         )}
+
+        {/* Settings Modal */}
+        <SettingsModal isOpen={settingsOpen} onClose={() => setSettingsOpen(false)} />
       </div>
     </nav>
   );

@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { USERS } from '../utils/mockData';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Lock, Mail, LogIn, Eye, EyeOff, Zap } from 'lucide-react';
+import { Lock, Mail, LogIn, Eye, EyeOff } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import lightLogo from '../assets/light.png';
+import darkLogo from '../assets/dark.png';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -39,30 +41,28 @@ const Login = () => {
 
   return (
     <div className={`min-h-screen flex items-center justify-center p-4 pt-20 transition-colors ${
-      isDark ? 'bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950' : 'bg-gradient-to-br from-white via-slate-50 to-white'
+      isDark ? 'bg-slate-950' : 'bg-white'
     }`}>
       <div className="w-full max-w-md z-10 animate-slide-in-up">
         {/* Logo */}
         <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center">
-              <Zap className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                Core<span className="text-brand-primary">Flux</span>
-              </h1>
-              <p className={`text-xs tracking-widest ${isDark ? 'text-slate-500' : 'text-slate-600'}`}>
-                AI HEATING NETWORK
-              </p>
-            </div>
-          </div>
+          <img 
+            src={isDark ? darkLogo : lightLogo} 
+            alt="CoreFlux Logo" 
+            className="h-12 mx-auto mb-4"
+          />
+          <h1 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
+            Anmelden
+          </h1>
+          <p className={`text-sm mt-2 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+            Melden Sie sich in Ihrer CoreFlux-Demo an
+          </p>
         </div>
 
         {/* Login Card */}
-        <div className={`rounded-2xl p-8 backdrop-blur-sm border transition-all ${
+        <div className={`rounded-2xl p-8 border transition-all ${
           isDark
-            ? 'bg-slate-900/50 border-slate-800 shadow-2xl'
+            ? 'bg-slate-900 border-slate-800 shadow-2xl'
             : 'bg-white border-slate-200 shadow-lg'
         }`}>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -88,7 +88,7 @@ const Login = () => {
                       ? 'bg-slate-800 border-slate-700 text-white placeholder-slate-500'
                       : 'bg-slate-50 border-slate-300 text-slate-900 placeholder-slate-400'
                   }`}
-                  placeholder="admin, user oder demo"
+                  placeholder="admin oder demo"
                   disabled={isLoading}
                 />
               </div>
@@ -127,7 +127,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full mt-6 py-3 bg-gradient-to-r from-brand-primary to-brand-secondary text-white rounded-lg font-semibold flex items-center justify-center gap-2 hover:shadow-lg transition-all disabled:opacity-50"
+              className="w-full mt-6 py-3 bg-brand-primary text-white rounded-lg font-semibold flex items-center justify-center gap-2 hover:shadow-lg transition-all disabled:opacity-50"
             >
               <LogIn className="w-5 h-5" />
               {isLoading ? 'Wird angemeldet...' : 'Anmelden'}
@@ -172,7 +172,7 @@ const Login = () => {
 
         {/* Footer */}
         <p className={`text-center text-xs mt-8 ${isDark ? 'text-slate-500' : 'text-slate-600'}`}>
-          Demo-Version • Für Schulprojekte und Präsentationen
+          CoreFlux Demo • Testen Sie mit admin/admin123 oder demo/demo123
         </p>
       </div>
     </div>

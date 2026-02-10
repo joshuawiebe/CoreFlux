@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Zap, TrendingUp, Activity, Cpu, AlertTriangle, Wifi, Code, Rocket, Lock, Thermometer, Clock, DollarSign } from 'lucide-react';
+import { Zap, TrendingUp, Activity, Cpu, AlertTriangle, Wifi, Code, Rocket, Lock } from 'lucide-react';
 import { simulateRealTimeData, generateChartData, DEVICES } from '../utils/mockData';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
@@ -217,119 +217,6 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Device Cost Breakdown */}
-          <div className={`rounded-xl border p-6 ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'}`}>
-            <h3 className={`text-xl font-bold mb-6 flex items-center gap-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>
-              <DollarSign className="w-6 h-6 text-green-500" />
-              Device Cost & Ownership
-            </h3>
-
-            <div className="space-y-4">
-              {userDevices.map((device, idx) => {
-                const yearsOwned = Math.random() * 4; // Simulated years since installation
-                const monthlyElectricity = Math.floor(Math.random() * 100) + 50;
-                const monthlyAISavings = 0; // 50% AI discount applies
-                const traditionalHeatingCost = monthlyElectricity * 1.8; // CoreFlux is more efficient
-                const monthlyHeatingSavings = traditionalHeatingCost - monthlyElectricity;
-                
-                return (
-                  <div
-                    key={device.id}
-                    className={`p-4 rounded-lg border ${isDark ? 'bg-slate-700 border-slate-600' : 'bg-slate-50 border-slate-200'}`}
-                  >
-                    <div className="flex items-start justify-between mb-4">
-                      <div>
-                        <p className={`font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                          {device.name} - {device.location}
-                        </p>
-                        <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-                          Installed {Math.floor(yearsOwned)} years ago
-                        </p>
-                      </div>
-                      <div className={`px-3 py-1 rounded-full text-xs font-bold ${
-                        yearsOwned >= 3
-                          ? 'bg-green-100 text-green-800'
-                          : yearsOwned >= 1
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-yellow-100 text-yellow-800'
-                      }`}>
-                        {yearsOwned >= 3 ? '✓ Paid Off' : `Year ${Math.ceil(yearsOwned)}/3-5`}
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                      <div>
-                        <p className={`font-semibold ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                          Monthly Cost
-                        </p>
-                        <p className={`text-lg font-bold text-brand-primary`}>€{monthlyElectricity}</p>
-                        <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>Electricity only</p>
-                      </div>
-
-                      <div>
-                        <p className={`font-semibold ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                          Traditional Cost
-                        </p>
-                        <p className={`text-lg font-bold ${isDark ? 'text-red-400' : 'text-red-600'}`}>
-                          €{Math.round(traditionalHeatingCost)}
-                        </p>
-                        <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>Would cost</p>
-                      </div>
-
-                      <div>
-                        <p className={`font-semibold ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                          Heating Savings
-                        </p>
-                        <p className={`text-lg font-bold text-green-500`}>€{Math.round(monthlyHeatingSavings)}</p>
-                        <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>Per month</p>
-                      </div>
-
-                      <div>
-                        <p className={`font-semibold ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                          Total Savings
-                        </p>
-                        <p className={`text-lg font-bold text-brand-primary`}>€{Math.round(monthlyHeatingSavings * yearsOwned * 12)}</p>
-                        <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>Since install</p>
-                      </div>
-                    </div>
-
-                    <div className={`mt-4 p-3 rounded border-l-4 ${
-                      yearsOwned >= 3
-                        ? isDark ? 'bg-green-900/20 border-l-green-500' : 'bg-green-50 border-l-green-500'
-                        : isDark ? 'bg-blue-900/20 border-l-blue-500' : 'bg-blue-50 border-l-blue-500'
-                    }`}>
-                      <div className="flex items-start gap-2">
-                        <Clock className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                        <div className="text-sm">
-                          {yearsOwned >= 3 ? (
-                            <p className={`font-semibold ${isDark ? 'text-green-300' : 'text-green-900'}`}>
-                              Device is fully paid off! You own it completely. Keep enjoying 50% AI discounts for life.
-                            </p>
-                          ) : (
-                            <div>
-                              <p className={`font-semibold ${isDark ? 'text-blue-300' : 'text-blue-900'} mb-1`}>
-                                Ownership in {Math.ceil(3 - yearsOwned)} years
-                              </p>
-                              <p className={isDark ? 'text-blue-200' : 'text-blue-800'}>
-                                Once the device is fully paid (typically 3-5 years), you own it outright. Continue earning heating discounts + 50% off all AI services.
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className={`mt-4 p-4 rounded-lg ${isDark ? 'bg-slate-700' : 'bg-slate-50'}`}>
-              <p className={`text-sm ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                <strong>💡 Pro Tip:</strong> Your device cost is covered by us. Installation (€500-1,500) is a one-time professional setup. Your monthly savings pay off the device over 3-5 years, after which it's yours forever.
-              </p>
-            </div>
-          </div>
-
           {/* Offline Devices Alert */}
           {offlineDevices.length > 0 && (
             <div className={`rounded-xl border p-6 ${isDark ? 'bg-red-900/20 border-red-700' : 'bg-red-50 border-red-200'}`}>
@@ -429,7 +316,7 @@ const Dashboard = () => {
           <Link to="/ai-chat" className={`p-4 rounded-lg text-center font-medium transition-all ${isDark ? 'bg-brand-primary text-white hover:bg-blue-700' : 'bg-brand-primary text-white hover:bg-blue-700'}`}>
             💬 Talk to AI
           </Link>
-          <Link to="/ai-chat" className={`p-4 rounded-lg text-center font-medium transition-all border-2 border-brand-primary ${isDark ? 'text-brand-primary hover:bg-slate-700' : 'text-brand-primary hover:bg-blue-50'}`}>
+          <Link to="/devices" className={`p-4 rounded-lg text-center font-medium transition-all border-2 border-brand-primary ${isDark ? 'text-brand-primary hover:bg-slate-700' : 'text-brand-primary hover:bg-blue-50'}`}>
             🔧 Manage Devices
           </Link>
           <Link to="/pricing" className={`p-4 rounded-lg text-center font-medium transition-all border-2 border-brand-primary ${isDark ? 'text-brand-primary hover:bg-slate-700' : 'text-brand-primary hover:bg-blue-50'}`}>
