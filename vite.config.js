@@ -6,5 +6,5 @@ export default defineConfig({
   server: {
     port: 3000
   },
-  base: 'https://joshuawiebe.github.io/CoreFlux',
+  base: 'https://coreflux.vercel.app/, https://joshuawiebe.github.io/CoreFlux/',
 })
