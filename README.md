@@ -425,7 +425,7 @@ npm run build
 ## 🔗 Important Links
 
 - **Live Development:** http://localhost:3000
-- **Repository:** /home/joshuawiebe/workspace/CoreFlux
+- **Hosting:** https://joshuawiebe.github.io/CoreFlux && https://coreflux.vercel.app
 - **OpenRouter API:** https://openrouter.ai
 - **Tailwind Docs:** https://tailwindcss.com
 - **React Docs:** https://react.dev
@@ -447,4 +447,4 @@ For issues and questions, please open an issue on GitHub.
 
 ---
 
-**Built with ❤️ by GustavManfred**
+**Built with ❤️ by Joshua Wiebe**
