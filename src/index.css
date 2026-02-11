@@ -2,8 +2,89 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Compatibility layer for old neon classes */
+/* Dark Mode Global Base Styles */
+@layer base {
+  html {
+    @apply overflow-x-hidden w-full;
+    color-scheme: light;
+  }
+  
+  html.dark {
+    color-scheme: dark;
+  }
+  
+  body {
+    @apply overflow-x-hidden w-full transition-colors duration-300;
+    @apply bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+  }
+
+  /* Ensure dark mode applies everywhere */
+  .dark {
+    @apply bg-slate-900 text-slate-50;
+    color-scheme: dark;
+  }
+
+  /* Global scrollbar styling */
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-slate-100 dark:bg-slate-800;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-400 dark:bg-slate-600 rounded-full hover:bg-slate-500 dark:hover:bg-slate-500;
+  }
+
+  /* Form inputs */
+  input[type="date"],
+  input[type="time"],
+  input[type="datetime-local"],
+  input[type="month"],
+  input[type="week"],
+  input[type="number"],
+  input[type="email"],
+  input[type="password"],
+  input[type="text"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="url"],
+  select,
+  textarea {
+    @apply dark:bg-slate-700 dark:border-slate-600 dark:text-white dark:placeholder-slate-500;
+  }
+
+  /* Checkbox and radio styling */
+  input[type="checkbox"],
+  input[type="radio"] {
+    @apply dark:bg-slate-700 dark:border-slate-600 dark:checked:bg-brand-primary;
+  }
+
+  /* Option styling */
+  option {
+    @apply dark:bg-slate-800 dark:text-white;
+  }
+}
+
+/* Comprehensive Component Utilities with Dark Mode */
 @layer components {
+  /* Form Input Base Class */
+  .input-field {
+    @apply w-full px-4 py-3 rounded-lg font-medium transition-all;
+    @apply bg-white dark:bg-slate-700/50 border border-slate-300 dark:border-slate-600;
+    @apply text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500;
+    @apply focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent;
+  }
+
+  .input-field:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  /* Color Compatibility */
   .text-neon-cyan { @apply text-brand-primary; }
   .text-neon-pink { @apply text-brand-accent; }
   .text-neon-purple { @apply text-brand-secondary; }
@@ -24,41 +105,62 @@
   .glow-text-purple { @apply text-brand-secondary; }
   .glow-text-green { @apply text-green-400; }
   
+  /* Buttons */
   .btn-neon { @apply px-6 py-2 rounded-lg font-semibold border-2 border-brand-primary text-brand-primary hover:bg-blue-50 dark:hover:bg-slate-800 transition-all; }
   .btn-primary { @apply px-6 py-3 rounded-lg font-semibold bg-gradient-to-r from-brand-primary to-brand-secondary text-white hover:shadow-lg transition-all; }
+  .btn-secondary { 
+    @apply px-6 py-3 rounded-lg font-semibold transition-all;
+    @apply bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white;
+    @apply hover:bg-slate-300 dark:hover:bg-slate-600;
+  }
   
+  /* Inputs */
   .input-neon { @apply w-full px-4 py-3 rounded-lg dark:bg-slate-800 dark:border-slate-700 dark:text-white bg-slate-100 border-slate-300 border focus:outline-none focus:ring-2 focus:ring-brand-primary; }
+  .input-base { 
+    @apply w-full px-4 py-2.5 rounded-lg border-2 transition-all;
+    @apply bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700;
+    @apply text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500;
+    @apply focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent;
+  }
   
-  .card { @apply rounded-2xl backdrop-blur-sm border dark:bg-slate-900/50 dark:border-slate-800 bg-white border-slate-200 p-6; }
-  .card.neon-border { @apply rounded-2xl backdrop-blur-sm border dark:bg-slate-900/50 dark:border-slate-800 bg-white border-slate-200 p-6; }
-  .card.neon-border-pink { @apply rounded-2xl backdrop-blur-sm border dark:bg-slate-900/50 dark:border-slate-800 bg-white border-slate-200 p-6; }
+  /* Cards */
+  .card { 
+    @apply rounded-2xl backdrop-blur-sm border p-6;
+    @apply bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-800;
+  }
+  .card-dark { 
+    @apply rounded-2xl backdrop-blur-sm border p-4 md:p-6;
+    @apply bg-white dark:bg-slate-800/80 border-slate-100 dark:border-slate-700;
+  }
+  .card-accent { 
+    @apply rounded-2xl backdrop-blur-sm border-2 p-6;
+    @apply bg-blue-50 dark:bg-slate-800 border-brand-primary;
+  }
   
-  .bg-dark-bg { @apply dark:bg-slate-900 bg-white; }
-  .bg-dark-card { @apply dark:bg-slate-800 bg-slate-50; }
-  .bg-dark-surface { @apply dark:bg-slate-800 bg-slate-100; }
+  /* Surfaces */
+  .bg-dark-bg { @apply bg-white dark:bg-slate-900; }
+  .bg-dark-card { @apply bg-slate-50 dark:bg-slate-800; }
+  .bg-dark-surface { @apply bg-slate-100 dark:bg-slate-800; }
+  .surface { @apply bg-slate-50 dark:bg-slate-800/50; }
   
-  .text-gray-300 { @apply dark:text-slate-300 text-slate-700; }
-  .text-gray-400 { @apply dark:text-slate-400 text-slate-600; }
-  .text-gray-500 { @apply dark:text-slate-500 text-slate-500; }
-  .text-gray-600 { @apply dark:text-slate-600 text-slate-600; }
-  .text-gray-700 { @apply dark:text-slate-700 text-slate-700; }
+  /* Text Colors - Auto Dark Mode */
+  .text-gray-300 { @apply text-slate-700 dark:text-slate-300; }
+  .text-gray-400 { @apply text-slate-600 dark:text-slate-400; }
+  .text-gray-500 { @apply text-slate-500 dark:text-slate-500; }
+  .text-gray-600 { @apply text-slate-600 dark:text-slate-600; }
+  .text-gray-700 { @apply text-slate-700 dark:text-slate-300; }
   
-  .border-gray-600 { @apply dark:border-slate-700 border-slate-300; }
-  .border-gray-700 { @apply dark:border-slate-700 border-slate-300; }
+  /* Border Colors - Auto Dark Mode */
+  .border-gray-300 { @apply border-slate-300 dark:border-slate-700; }
+  .border-gray-400 { @apply border-slate-400 dark:border-slate-600; }
+  .border-gray-600 { @apply border-slate-300 dark:border-slate-700; }
+  .border-gray-700 { @apply border-slate-300 dark:border-slate-700; }
   
+  /* Animations */
   .animate-slideInUp { @apply animate-slide-in-up; }
   .animate-slideInDown { @apply animate-slide-in-down; }
   .animate-fadeIn { @apply animate-fade-in; }
   .animate-float { @apply animate-pulse-subtle; }
-  
-  .input-field-dark { @apply dark:bg-slate-800 dark:border-slate-700 dark:text-white dark:placeholder-slate-500; }
-  .input-field-light { @apply bg-slate-50 border-slate-300 text-slate-900 placeholder-slate-400; }
-}
-
-@layer base {
-  body {
-    @apply font-sans;
-  }
 }
 
 @layer utilities {

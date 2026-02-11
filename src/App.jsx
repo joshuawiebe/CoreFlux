@@ -2,12 +2,15 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
-import Navbar from './components/Navbar';
+import { ModelsProvider } from './context/ModelsContext';
+import ProfessionalNavbar from './components/NavbarV2';
+import CookieConsent from './components/CookieConsent';
 import PrivateRoute from './components/PrivateRoute';
 
 // Pages
 import Landing from './pages/LandingNew';
 import Login from './pages/Login';
+import SignupPagePro from './pages/SignupPagePro';
 import Dashboard from './pages/Dashboard';
 import DeviceOverview from './pages/DeviceOverview';
 import Settings from './pages/Settings';
@@ -22,37 +25,38 @@ import AIChat from './pages/AIChat';
 // Styles
 import './index.css';
 
+// Smart Landing Route that redirects logged-in users to dashboard
+function SmartLanding() {
+  const { isLoggedIn } = useAuth();
+  if (isLoggedIn) {
+    return <Navigate to="/dashboard" replace />;
+  }
+  return <Landing />;
+}
+
 function AppLayout({ children }) {
   const { isLoggedIn } = useAuth();
-  const { isDark } = useTheme();
   const location = useLocation();
   
-  // Check if current route is full-page (like AI Chat)
-  const isFullPageRoute = location.pathname === '/ai-chat';
-  
-  // Apply dark mode to html element
-  React.useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [isDark]);
+  // Check if current route is full-page (like AI Chat, Devices Overview)
+  const fullPageRoutes = ['/ai-chat', '/devices'];
+  const isFullPageRoute = fullPageRoutes.includes(location.pathname);
   
   return (
     <>
-      {!isFullPageRoute && <Navbar />}
+      {!isFullPageRoute && <ProfessionalNavbar />}
       {!isLoggedIn && !isFullPageRoute ? (
-        <div>
+        <div className="w-full min-h-screen">
           {children}
         </div>
       ) : (
-        <main className={isFullPageRoute ? '' : 'flex-1 pt-24 pb-8'}>
-          <div className={isFullPageRoute ? '' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'}>
+        <main className={`w-full min-h-screen ${isFullPageRoute ? 'bg-dark-bg' : 'pt-20 pb-8 bg-dark-bg'}`}>
+          <div className={isFullPageRoute ? 'w-full h-full' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'}>
             {children}
           </div>
         </main>
       )}
+      <CookieConsent />
     </>
   );
 }
@@ -62,17 +66,19 @@ function App() {
     <Router>
       <ThemeProvider>
         <AuthProvider>
-          <AppLayout>
+          <ModelsProvider>
+            <div className="w-full min-h-screen overflow-x-hidden">
+              <AppLayout>
             <Routes>
               {/* Public Routes */}
-              <Route path="/" element={<Landing />} />
+              <Route path="/" element={<SmartLanding />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<SignupPagePro />} />
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/team" element={<Team />} />
               <Route path="/impressum" element={<Impressum />} />
               <Route path="/privacy" element={<Privacy />} />
-              <Route path="/ai-chat" element={<AIChat />} />
 
               {/* Protected Routes */}
               <Route
@@ -107,11 +113,21 @@ function App() {
                   </PrivateRoute>
                 }
               />
+              <Route
+                path="/ai-chat"
+                element={
+                  <PrivateRoute>
+                    <AIChat />
+                  </PrivateRoute>
+                }
+              />
 
               {/* Fallback */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
-          </AppLayout>
+              </AppLayout>
+            </div>
+          </ModelsProvider>
         </AuthProvider>
       </ThemeProvider>
     </Router>

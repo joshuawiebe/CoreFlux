@@ -1,8 +1,8 @@
 import React from 'react';
-import ProfessionalAIApp from '../components/ProfessionalAIApp';
+import EnhancedAIChat from '../components/EnhancedAIChat';
 
 const AIChat = () => {
-  return <ProfessionalAIApp />;
+  return <EnhancedAIChat />;
 };
 
 export default AIChat;

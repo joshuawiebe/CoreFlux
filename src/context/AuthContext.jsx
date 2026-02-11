@@ -50,6 +50,49 @@ export const AuthProvider = ({ children }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isLoggedIn]);
 
+  const signup = async (credentials) => {
+    try {
+      // Validate required fields
+      if (!credentials.email || !credentials.password) {
+        throw new Error('Email and password are required');
+      }
+
+      // Create new user object with all provided information
+      const newUser = {
+        id: `user_${Date.now()}`,
+        firstName: credentials.firstName || '',
+        lastName: credentials.lastName || '',
+        email: credentials.email,
+        role: credentials.role || 'user',
+        company: credentials.company || '',
+        dateOfBirth: credentials.dateOfBirth || '',
+        phone: credentials.phone || '',
+        address: credentials.address || '',
+        createdAt: new Date().toISOString(),
+        lastLogin: new Date().toISOString(),
+      };
+      
+      // Set user and logged in state
+      setUser(newUser);
+      setIsLoggedIn(true);
+      
+      // Persist in LocalStorage
+      localStorage.setItem('user', JSON.stringify(newUser));
+      localStorage.setItem('user-email', credentials.email);
+      localStorage.setItem('auth-token', `token_${Date.now()}`);
+      
+      // Set cookies for sessions
+      setCookie('logged-in', 'true', 30);
+      setCookie('user-email', credentials.email, 30);
+      setCookie('user-id', newUser.id, 30);
+      
+      return true;
+    } catch (error) {
+      console.error('Signup error:', error);
+      throw error;
+    }
+  };
+
   const login = (username, password, users) => {
     if (users[username] && users[username].password === password) {
       const newUser = {
@@ -79,6 +122,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('scroll-position');
     deleteCookie('logged-in');
     deleteCookie('username');
+    deleteCookie('user-email');
   };
 
   // Stelle Scroll-Position wieder her, wenn User angemeldet ist
@@ -94,7 +138,7 @@ export const AuthProvider = ({ children }) => {
   }, [isLoggedIn]);
 
   return (
-    <AuthContext.Provider value={{ user, isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ user, isLoggedIn, login, logout, signup }}>
       {children}
     </AuthContext.Provider>
   );

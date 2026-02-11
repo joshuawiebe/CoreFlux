@@ -4,26 +4,64 @@ const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
   const [isDark, setIsDark] = useState(() => {
-    // Lade das gespeicherte Theme aus LocalStorage oder Standard auf true
-    const savedTheme = localStorage.getItem('theme-mode');
-    if (savedTheme) {
+    // 1. Check localStorage first (user preference)
+    const savedTheme = localStorage.getItem('theme-preference');
+    if (savedTheme !== null) {
       return savedTheme === 'dark';
     }
-    // Fallback: Prüfe OS-Einstellung
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    // 2. Check system preference
+    if (window.matchMedia) {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    
+    // 3. Default to light mode
+    return false;
   });
 
+  // Apply theme to document root
   useEffect(() => {
-    // Speichere Theme-Änderungen in LocalStorage
-    localStorage.setItem('theme-mode', isDark ? 'dark' : 'light');
+    const root = document.documentElement;
     
-    // Wende Theme auf document an
     if (isDark) {
-      document.documentElement.classList.add('dark');
+      root.classList.add('dark');
+      root.style.colorScheme = 'dark';
     } else {
-      document.documentElement.classList.remove('dark');
+      root.classList.remove('dark');
+      root.style.colorScheme = 'light';
     }
   }, [isDark]);
+
+  // Save preference to localStorage when toggled
+  useEffect(() => {
+    localStorage.setItem('theme-preference', isDark ? 'dark' : 'light');
+  }, [isDark]);
+
+  // Listen for system theme changes when no user preference is set
+  useEffect(() => {
+    if (!window.matchMedia) return;
+    
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    const handleChange = (e) => {
+      const hasUserPreference = localStorage.getItem('theme-preference');
+      // Only auto-switch if user hasn't manually set preference
+      if (!hasUserPreference) {
+        setIsDark(e.matches);
+      }
+    };
+    
+    // Modern API (addEventListener)
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    } 
+    // Fallback for older browsers
+    else {
+      mediaQuery.addListener(handleChange);
+      return () => mediaQuery.removeListener(handleChange);
+    }
+  }, []);
 
   const toggleTheme = () => {
     setIsDark(prevState => !prevState);

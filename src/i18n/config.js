@@ -12,14 +12,15 @@ const resources = {
   es: { translation: esTranslations },
 };
 
-// Lade die gespeicherte Sprache aus LocalStorage oder nutze Browser-Sprache
+// Get saved language or detect from browser
 const getSavedLanguage = () => {
+  // First check localStorage
   const savedLanguage = localStorage.getItem('language');
-  if (savedLanguage) {
+  if (savedLanguage && Object.keys(resources).includes(savedLanguage)) {
     return savedLanguage;
   }
   
-  // Fallback zur Browser-Sprache
+  // Then check browser language
   const browserLanguage = navigator.language || navigator.userLanguage;
   const languageCode = browserLanguage.split('-')[0];
   
@@ -27,7 +28,8 @@ const getSavedLanguage = () => {
     return languageCode;
   }
   
-  return 'de'; // Standard auf Deutsch
+  // Fallback to English
+  return 'en';
 };
 
 const initialLanguage = getSavedLanguage();
@@ -37,20 +39,24 @@ i18n
   .init({
     resources,
     lng: initialLanguage,
-    fallbackLng: 'de',
+    fallbackLng: 'en',
+    ns: ['translation'],
+    defaultNS: 'translation',
     interpolation: {
-      escapeValue: false,
+      escapeValue: false, // React already escapes values
     },
     detection: {
       order: ['localStorage', 'navigator'],
       caches: ['localStorage'],
     },
+    react: {
+      useSuspense: false, // Disable Suspense
+    },
   });
 
-// Speichere Sprache wenn sie wechselt
+// Save language to localStorage and cookie when it changes
 i18n.on('languageChanged', (lng) => {
   localStorage.setItem('language', lng);
-  // Speichere auch als Cookie
   document.cookie = `language=${lng};expires=${new Date(Date.now() + 7*24*60*60*1000).toUTCString()};path=/;SameSite=Strict`;
 });
 
